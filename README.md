@@ -49,11 +49,9 @@ python -m uvicorn app:app --reload --port 8002
 Frontend
 Open frontend/index.html in your browser.
 
-'''
+
 🧱 Project Structure
-pgsql
-Copy
-Edit
+
 threat-intel-feed-aggregator/
 │   README.md
 │   requirements.txt
@@ -71,7 +69,8 @@ threat-intel-feed-aggregator/
 │
 └── screenshots/
     └── dashboard_light.png
-'''
+
+
 🛠️ Tech Stack
 Backend: FastAPI (Python)
 
