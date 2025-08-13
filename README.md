@@ -50,27 +50,23 @@ Frontend
 Open frontend/index.html in your browser.
 
 
-🧱 Project Structure
+## 🧱 Project Structure
 
-'''
+```text
 threat-intel-feed-aggregator/
-│   README.md
-│   requirements.txt
-│
-├── backend/
-│   └── app.py
-│
-├── frontend/
-│   └── index.html
-│
-├── data/
-│   ├── feed_abuseipdb.json
-│   ├── feed_otx.json
-│   └── feed_custom.json
-│
-└── screenshots/
-    └── dashboard_light.png
-'''
+├─ README.md
+├─ requirements.txt
+├─ backend/
+│  └─ app.py
+├─ frontend/
+│  └─ index.html
+├─ data/
+│  ├─ feed_abuseipdb.json
+│  ├─ feed_otx.json
+│  └─ feed_custom.json
+└─ screenshots/
+   └─ dashboard_light.png
+
 
 🛠️ Tech Stack
 Backend: FastAPI (Python)
