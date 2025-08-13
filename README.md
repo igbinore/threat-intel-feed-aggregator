@@ -1,26 +1,26 @@
-🛰 Threat Intel Feed Aggregator
-I built this to consolidate multiple threat intelligence feeds into one clean, deduplicated view.
-Instead of bouncing between OTX, AbuseIPDB, and custom lists, I can now pull them together, filter, and export for investigations.
+🛡 Threat Intel Feed Aggregator
+I built this project to make it easier to centralize, view, and export threat intelligence feeds from multiple sources in one place. Instead of checking AbuseIPDB, AlienVault OTX, or custom feeds individually, this tool pulls them together into a single dashboard so I can quickly assess threats and export them for reporting or further analysis.
 
 🚀 Features
-Multi-feed aggregation – pulls from OTX, AbuseIPDB, and custom feeds.
+Multiple feed integration – Includes example connectors for:
 
-De-duplication with counts – groups repeated indicators and shows frequency.
+AbuseIPDB
 
-IOC type filtering – focus on IPs, domains, URLs, hashes, etc.
+AlienVault OTX
 
-Export options – CSV, JSON, or ZIP bundle (both formats).
+Custom JSON feed support
 
-Beautiful UI – clean dashboard with light/dark mode toggle.
+Live dashboard view – Quickly see the latest IOCs from all feeds.
 
-Local & fast – runs on your machine, no data leaves your environment.
+Filter & search – Narrow results by feed source, IOC type, or keyword.
 
-📸 Screenshots
-Main Dashboard – Light Mode
+Export options – Save filtered data to CSV or JSON for use in other tools.
 
-Main Dashboard – Dark Mode
+Lightweight & fast – Runs locally with Python & vanilla JavaScript.
 
-Export Options View
+📸 Screenshot
+Dashboard (Light Mode)
+
 
 ⚙️ Setup
 bash
@@ -30,10 +30,10 @@ Edit
 git clone https://github.com/igbinore/threat-intel-feed-aggregator.git
 cd threat-intel-feed-aggregator
 
-# Create & activate virtual environment
+# Create & activate a virtual environment
 python -m venv venv
 venv\Scripts\activate   # Windows
-# source venv/bin/activate   # Mac/Linux
+# source venv/bin/activate  # Mac/Linux
 
 # Install dependencies
 pip install -r requirements.txt
@@ -44,18 +44,17 @@ bash
 Copy
 Edit
 cd backend
-uvicorn app:app --reload --port 8002
+python -m uvicorn app:app --reload --port 8002
 Frontend
 Open frontend/index.html in your browser.
 
-🧱 Structure
+🧱 Project Structure
 pgsql
 Copy
 Edit
 threat-intel-feed-aggregator/
 │   README.md
 │   requirements.txt
-│   .gitignore
 │
 ├── backend/
 │   └── app.py
@@ -64,27 +63,29 @@ threat-intel-feed-aggregator/
 │   └── index.html
 │
 ├── data/
-│   ├── feed_otx.json
 │   ├── feed_abuseipdb.json
+│   ├── feed_otx.json
 │   └── feed_custom.json
 │
 └── screenshots/
-    ├── dashboard_light.png
-    ├── dashboard_dark.png
-    └── export_view.png
+    └── dashboard_light.png
 🛠️ Tech Stack
 Backend: FastAPI (Python)
 
 Frontend: Bootstrap 5, Vanilla JS
 
-Data: JSON feeds from OTX, AbuseIPDB, and custom sources
+Data Format: JSON
 
-Exports: CSV / JSON / ZIP
+Export: CSV / JSON
 
-💡 Why I built this
-When working incidents, I noticed I was wasting time flipping between threat intel sources.
-This tool pulls them together, strips duplicates, and lets me export everything cleanly.
-It’s built to be simple, local, and easy to extend with new feeds.
+💡 Why I Built This
+As a SOC Analyst, I constantly reference multiple threat intel feeds during investigations. Jumping between different sites wastes time, so I built this aggregator to pull everything into one local tool. The idea was to make it:
+
+Fast to run locally
+
+Easy to extend with new feeds
+
+Simple to export & share
 
 📜 License
-MIT — use it, tweak it, share it.
+MIT — free to use and modify.
