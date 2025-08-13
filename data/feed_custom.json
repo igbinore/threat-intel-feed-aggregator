@@ -1,0 +1,5 @@
+[
+  {"type":"sha256","value":"275a021bbfb6480f6e3afc0f1b2bf5b92c1b0d5f6f5f10a7a6a5c0f5e0c1d2b3","first_seen":"2025-08-04T07:00:00Z","source":"Custom"},
+  {"type":"email","value":"it-helpdesk@example.org","first_seen":"2025-08-02T10:20:00Z","source":"Custom"},
+  {"type":"url","value":"https://suspicious-login.net/reset","first_seen":"2025-08-06T13:00:00Z","source":"Custom"}
+]

@@ -1,0 +1,5 @@
+[
+  {"type":"ipv4","value":"45.133.1.22","first_seen":"2025-08-05T08:30:00Z","source":"AbuseIPDB"},
+  {"type":"ipv4","value":"185.199.110.153","first_seen":"2025-08-05T09:00:00Z","source":"AbuseIPDB"},
+  {"type":"domain","value":"suspicious-login.net","first_seen":"2025-08-06T11:10:00Z","source":"AbuseIPDB"}
+]

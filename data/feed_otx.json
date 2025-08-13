@@ -1,0 +1,5 @@
+[
+  {"type":"ipv4","value":"185.199.110.153","first_seen":"2025-08-01T10:00:00Z","source":"OTX"},
+  {"type":"domain","value":"malicious-example.com","first_seen":"2025-08-02T12:15:00Z","source":"OTX"},
+  {"type":"url","value":"http://malicious-example.com/login.php","first_seen":"2025-08-03T09:45:00Z","source":"OTX"}
+]
