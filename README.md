@@ -18,8 +18,9 @@ Export options – Save filtered data to CSV or JSON for use in other tools.
 
 Lightweight & fast – Runs locally with Python & vanilla JavaScript.
 
-📸 Screenshot
-Dashboard (Light Mode)
+📸 Screenshot example
+![Dashboard Screenshot](./screenshots/dashboard_light.png)
+
 
 
 ⚙️ Setup
@@ -48,6 +49,7 @@ python -m uvicorn app:app --reload --port 8002
 Frontend
 Open frontend/index.html in your browser.
 
+'''
 🧱 Project Structure
 pgsql
 Copy
@@ -69,6 +71,7 @@ threat-intel-feed-aggregator/
 │
 └── screenshots/
     └── dashboard_light.png
+'''
 🛠️ Tech Stack
 Backend: FastAPI (Python)
 
