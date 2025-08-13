@@ -1,22 +1,20 @@
-🛡 Threat Intel Feed Aggregator
-I built this project to make it easier to centralize, view, and export threat intelligence feeds from multiple sources in one place. Instead of checking AbuseIPDB, AlienVault OTX, or custom feeds individually, this tool pulls them together into a single dashboard so I can quickly assess threats and export them for reporting or further analysis.
+🛰 Threat Intel Feed Aggregator
 
-🚀 Features
-Multiple feed integration – Includes example connectors for:
+I built this project to save time when gathering and reviewing threat intelligence.
+Instead of visiting multiple platforms one by one, I wanted a single dashboard that pulls in feeds from different sources, lets me filter, and gives me export-ready data for investigations.
 
-AbuseIPDB
+🚀 What It Does
 
-AlienVault OTX
+Aggregate multiple threat intel feeds – AbuseIPDB, AlienVault OTX, and a custom feed.
 
-Custom JSON feed support
+Clean & normalize data – No more mismatched formats between sources.
 
-Live dashboard view – Quickly see the latest IOCs from all feeds.
+Search & filter – Quickly find specific IPs, domains, or indicators.
 
-Filter & search – Narrow results by feed source, IOC type, or keyword.
+Export – Save current view to CSV or JSON in one click.
 
-Export options – Save filtered data to CSV or JSON for use in other tools.
+Lightweight UI – Runs locally, no heavy setup required.
 
-Lightweight & fast – Runs locally with Python & vanilla JavaScript.
 
 📸 Screenshot example
 ![Dashboard Screenshot](./screenshots/dashboard_light.png)
@@ -24,31 +22,24 @@ Lightweight & fast – Runs locally with Python & vanilla JavaScript.
 
 
 ⚙️ Setup
-bash
-Copy
-Edit
-# Clone the repo
+1. Clone the repo
 git clone https://github.com/igbinore/threat-intel-feed-aggregator.git
 cd threat-intel-feed-aggregator
 
-# Create & activate a virtual environment
+2. Create a virtual environment & install dependencies
 python -m venv venv
 venv\Scripts\activate   # Windows
-# source venv/bin/activate  # Mac/Linux
+# source venv/bin/activate   # Mac/Linux
 
-# Install dependencies
 pip install -r requirements.txt
-▶️ Run
-Backend (FastAPI)
 
-bash
-Copy
-Edit
+3. Run the backend (FastAPI)
 cd backend
-python -m uvicorn app:app --reload --port 8002
-Frontend
-Open frontend/index.html in your browser.
+uvicorn app:app --reload --port 8001
 
+4. Open the frontend
+
+Just open frontend/index.html in your browser.
 
 ## 🧱 Project Structure
 
@@ -67,24 +58,19 @@ threat-intel-feed-aggregator/
 └─ screenshots/
    └─ dashboard_light.png
 
+🛠 Tech Stack
 
-🛠️ Tech Stack
 Backend: FastAPI (Python)
 
-Frontend: Bootstrap 5, Vanilla JS
+Frontend: HTML, Bootstrap 5, Vanilla JS
 
-Data Format: JSON
+Data Handling: Pandas
 
-Export: CSV / JSON
+Exports: CSV, JSON
 
 💡 Why I Built This
-As a SOC Analyst, I constantly reference multiple threat intel feeds during investigations. Jumping between different sites wastes time, so I built this aggregator to pull everything into one local tool. The idea was to make it:
 
-Fast to run locally
-
-Easy to extend with new feeds
-
-Simple to export & share
+Pulling threat intel from multiple portals was slowing me down in investigations. I wanted a simple, extendable tool I can run locally and integrate into my workflow. This version already covers the basics, but adding enrichment APIs (like VirusTotal, AbuseIPDB lookups) will make it even more powerful.
 
 📜 License
 MIT — free to use and modify.
