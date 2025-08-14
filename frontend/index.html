@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Threat Intel Feed Aggregator</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  html,body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  .card{box-shadow:0 1px 2px rgba(0,0,0,.05);border:1px solid #e5e7eb;border-radius:1rem;background:#fff}
+  .btn{display:inline-flex;align-items:center;gap:.5rem;border-radius:.75rem;padding:.5rem .875rem;font-weight:600;border:1px solid rgba(0,0,0,.1);background:#fff}
+  .btn:hover{background:#f9fafb}
+  .btn-primary{background:#2563eb;color:#fff;border-color:#2563eb}
+  .btn-primary:hover{background:#1d4ed8}
+  .pill{display:inline-flex;align-items:center;border-radius:9999px;background:#f3f4f6;padding:.25rem .5rem;font-size:.75rem}
+  .badge{display:inline-flex;align-items:center;border-radius:9999px;padding:.125rem .5rem;font-size:.75rem;font-weight:700;border:1px solid}
+  .badge-gray{background:#f3f4f6;color:#374151;border-color:#e5e7eb}
+  .badge-green{background:#ecfdf5;color:#065f46;border-color:#a7f3d0}
+  .badge-purple{background:#f5f3ff;color:#5b21b6;border-color:#ddd6fe}
+  .input,.select{width:100%;border:1px solid #d1d5db;border-radius:.75rem;padding:.5rem .75rem;font-size:.875rem}
+  .select{min-height:160px}
+  .table-head{font-size:.75rem;letter-spacing:.05em;color:#6b7280;text-transform:uppercase}
+  .copy{border:1px solid #e5e7eb;border-radius:.5rem;padding:.125rem .375rem;font-size:.75rem}
+</style>
+</head>
+<body class="bg-gray-50">
+<header class="max-w-6xl mx-auto px-4 sm:px-6 pt-8">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+      <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-blue-600 text-white">⌁</span>
+      Threat Intel Feed Aggregator
+    </h1>
+    <div class="text-xs text-gray-500">API: <a id="apiLink" class="underline decoration-dotted" target="_blank"></a></div>
+  </div>
+</header>
+
+<section class="max-w-6xl mx-auto px-4 sm:px-6 mt-6">
+  <div class="card p-5">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div>
+        <label class="block text-sm font-medium mb-1 text-gray-700">IOC Type</label>
+        <select id="typeSelect" class="select" multiple>
+          <option>ipv4</option><option>domain</option><option>url</option><option>email</option><option>sha256</option>
+        </select>
+        <p class="mt-1 text-xs text-gray-500">Ctrl/Cmd-click to select multiple</p>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1 text-gray-700">Source</label>
+        <select id="sourceSelect" class="select" multiple></select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1 text-gray-700">Search</label>
+        <input id="searchInput" class="input" placeholder="value contains…"/>
+        <div class="mt-4 flex items-center gap-3">
+          <button id="applyBtn" class="btn btn-primary">▶ Apply</button>
+          <button id="resetBtn" class="btn">Reset</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="max-w-6xl mx-auto px-4 sm:px-6 mt-6">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+    <div class="card p-5 flex items-center justify-between">
+      <div><div class="text-sm text-gray-600">Total Indicators</div>
+        <div class="flex items-baseline gap-2"><div id="totalCount" class="text-3xl font-bold text-gray-900">0</div><span class="pill">all</span></div>
+      </div><div class="text-gray-400">📊</div></div>
+    <div class="card p-5 flex items-center justify-between">
+      <div><div class="text-sm text-gray-600">Top Type</div>
+        <div class="flex items-center gap-2"><span id="topType" class="pill">–</span><span id="topTypeCount" class="text-sm text-gray-500"></span></div>
+      </div><div class="text-gray-400">🏷️</div></div>
+    <div class="card p-5 flex items-center justify-between">
+      <div><div class="text-sm text-gray-600">Top Source</div>
+        <div class="flex items-center gap-2"><span id="topSource" class="pill">–</span><span id="topSourceCount" class="text-sm text-gray-500"></span></div>
+      </div><div class="text-gray-400">🗂️</div></div>
+  </div>
+</section>
+
+<section class="max-w-6xl mx-auto px-4 sm:px-6 mt-6">
+  <div class="flex flex-wrap items-center gap-3">
+    <button id="exportCsvBtn" class="btn">⬇ Export CSV</button>
+    <button id="exportJsonBtn" class="btn">⬇ Export JSON</button>
+    <button id="copyAllBtn" class="btn">📋 Copy All</button>
+    <span id="status" class="text-sm text-gray-500"></span>
+  </div>
+</section>
+
+<section class="max-w-6xl mx-auto px-4 sm:px-6 mt-6 mb-16">
+  <div class="card">
+    <div class="flex items-center justify-between px-5 pt-4">
+      <h2 class="text-base font-semibold text-gray-900">Aggregated Indicators</h2>
+      <span id="tableCountBubble" class="inline-flex h-7 min-w-7 items-center justify-center rounded-full bg-gray-900 px-2 text-xs font-semibold text-white">0</span>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="table-head px-5 py-3 text-left">Type</th>
+            <th class="table-head px-5 py-3 text-left">Value</th>
+            <th class="table-head px-5 py-3 text-left">Source</th>
+            <th class="table-head px-5 py-3 text-left">First Seen</th>
+            <th class="table-head px-5 py-3 text-right">Count</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody" class="bg-white divide-y divide-gray-100"></tbody>
+      </table>
+    </div>
+    <div id="emptyState" class="hidden px-5 py-10 text-center text-sm text-gray-500">
+      No indicators found. Adjust filters and click <span class="font-medium">Apply</span>.
+    </div>
+  </div>
+</section>
+
+<script>
+  // ===== CONFIG (set to 8010 to match your screenshot) =====
+  const API_BASE = "http://127.0.0.1:8010";
+  // ========================================================
+  const els = {
+    apiLink: document.getElementById("apiLink"),
+    typeSelect: document.getElementById("typeSelect"),
+    sourceSelect: document.getElementById("sourceSelect"),
+    searchInput: document.getElementById("searchInput"),
+    applyBtn: document.getElementById("applyBtn"),
+    resetBtn: document.getElementById("resetBtn"),
+    exportCsvBtn: document.getElementById("exportCsvBtn"),
+    exportJsonBtn: document.getElementById("exportJsonBtn"),
+    copyAllBtn: document.getElementById("copyAllBtn"),
+    tableBody: document.getElementById("tableBody"),
+    emptyState: document.getElementById("emptyState"),
+    totalCount: document.getElementById("totalCount"),
+    topType: document.getElementById("topType"),
+    topTypeCount: document.getElementById("topTypeCount"),
+    topSource: document.getElementById("topSource"),
+    topSourceCount: document.getElementById("topSourceCount"),
+    tableCountBubble: document.getElementById("tableCountBubble"),
+    status: document.getElementById("status"),
+  };
+  els.apiLink.textContent = API_BASE; els.apiLink.href = API_BASE + "/docs";
+
+  function getMulti(el){return Array.from(el.selectedOptions).map(o=>o.value.trim()).filter(Boolean);}
+  function mapType(t){ t=t.toLowerCase(); if(t==="ipv4")return "ip"; if(t==="sha256")return "hash"; return t; }
+
+  function buildQuery(){
+    const p = new URLSearchParams();
+    const q = els.searchInput.value.trim();
+    const types = getMulti(els.typeSelect);
+    const sources = getMulti(els.sourceSelect);
+    if(q) p.set("q", q);
+    if(types.length===1) p.set("type", mapType(types[0]));
+    if(sources.length===1) p.set("source", sources[0]);
+    p.set("sort","last_seen:desc"); p.set("limit","500");
+    return p.toString();
+  }
+
+  async function fetchIndicators(){
+    try{
+      const res = await fetch(`${API_BASE}/indicators?${buildQuery()}`);
+      if(!res.ok) throw new Error(`API ${res.status}`);
+      const data = await res.json();
+      renderTable(data);
+    }catch(e){ console.error(e); renderTable([]); }
+  }
+
+  async function fetchAggregate(){
+    try{
+      const res = await fetch(`${API_BASE}/aggregate?${buildQuery()}`);
+      if(!res.ok) throw new Error(`API ${res.status}`);
+      const agg = await res.json();
+      els.totalCount.textContent = agg.total ?? 0;
+      els.topType.textContent = agg.top_type?.type ?? "–";
+      els.topTypeCount.textContent = agg.top_type ? `(${agg.top_type.count})` : "";
+      els.topSource.textContent = agg.top_source?.source ?? "–";
+      els.topSourceCount.textContent = agg.top_source ? `(${agg.top_source.count})` : "";
+    }catch(e){
+      console.error(e);
+      els.totalCount.textContent = "0";
+      els.topType.textContent = "–"; els.topTypeCount.textContent = "";
+      els.topSource.textContent = "–"; els.topSourceCount.textContent = "";
+    }
+  }
+
+  function renderTable(rows){
+    els.tableBody.innerHTML = "";
+    els.tableCountBubble.textContent = rows.length;
+    const typeCounts = {}, sourceCounts = {}, sources = new Set();
+
+    rows.forEach(r=>{
+      typeCounts[r.type]=(typeCounts[r.type]||0)+1;
+      sourceCounts[r.source]=(sourceCounts[r.source]||0)+1;
+      sources.add(r.source);
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td class="px-5 py-3">${badgeType(r.type)}</td>
+        <td class="px-5 py-3">
+          <div class="flex items-center gap-2">
+            <a class="text-blue-600 hover:underline break-all" href="${safeUrl(r.indicator)}" target="_blank" rel="noopener">${escapeHtml(r.indicator)}</a>
+            <button class="copy" data-copy="${escapeHtml(r.indicator)}" title="Copy">📋</button>
+          </div>
+        </td>
+        <td class="px-5 py-3">${escapeHtml(r.source)}</td>
+        <td class="px-5 py-3">${escapeHtml(r.first_seen)}</td>
+        <td class="px-5 py-3 text-right"><span class="badge badge-gray">1</span></td>`;
+      els.tableBody.appendChild(tr);
+    });
+
+    els.emptyState.classList.toggle("hidden", rows.length>0);
+
+    if(!els.sourceSelect.options.length && sources.size){
+      Array.from(sources).sort().forEach(s=>{
+        const o=document.createElement("option"); o.value=o.textContent=s; els.sourceSelect.appendChild(o);
+      });
+    }
+
+    // Copy buttons
+    els.tableBody.querySelectorAll("button.copy").forEach(b=>{
+      b.onclick=async()=>{ await navigator.clipboard.writeText(b.getAttribute("data-copy")); };
+    });
+  }
+
+  function badgeType(t){const map={ip:"ipv4",url:"url",domain:"domain",email:"email",hash:"sha256"};
+    const label=map[t]||t; const cls=t==="ip"?"badge-green":(t==="url"?"badge-purple":"badge-gray");
+    return `<span class="badge ${cls}">${label}</span>`;}
+  function escapeHtml(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+  function safeUrl(v){ if(/^https?:\/\//i.test(v)) return v; if(/^[\w.-]+\.[A-Za-z]{2,}$/i.test(v)) return "http://"+v; return "javascript:void(0)"; }
+
+  // Events
+  document.getElementById("applyBtn").onclick=()=>{fetchIndicators();fetchAggregate();}
+  document.getElementById("resetBtn").onclick=()=>{els.searchInput.value="";els.typeSelect.selectedIndex=-1;els.sourceSelect.selectedIndex=-1;fetchIndicators();fetchAggregate();}
+  document.getElementById("exportCsvBtn").onclick=async()=>{
+    const res=await fetch(`${API_BASE}/export`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({format:"csv"})});
+    const txt=await res.text(); download("indicators.csv",txt,"text/csv");
+  };
+  document.getElementById("exportJsonBtn").onclick=async()=>{
+    const res=await fetch(`${API_BASE}/export`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({format:"json"})});
+    const txt=await res.text(); download("indicators.json",txt,"application/json");
+  };
+  document.getElementById("copyAllBtn").onclick=async()=>{
+    const res=await fetch(`${API_BASE}/export`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({format:"json"})});
+    const data=await res.json(); const text=(data||[]).map(r=>r.indicator).join("\n");
+    await navigator.clipboard.writeText(text); els.status.textContent="Copied all IOCs ✔"; setTimeout(()=>els.status.textContent="",1200);
+  };
+
+  function download(name,text,mime){const blob=new Blob([text],{type:mime});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();}
+  // Initial load
+  fetchIndicators(); fetchAggregate();
+</script>
+</body>
+</html>
